@@ -310,11 +310,16 @@ class CrmClient extends Request
             ->groupBy("现场客服");
         $result = [];
         foreach ($data as $key => $value) {
-            $arr = $value->pluck('姓名');
+            $arr = $value->map(function ($item) {
+                return [
+                    'name' => $item['姓名'],
+                    'type' => data_get($item,'预约类型') ?: "自然到院",
+                ];
+            });
             $result[] = [
                 'owner' => $key,
                 'count' => $arr->count(),
-                'name' => $arr->join('  '),
+                'customers' => $arr->toArray(),
             ];
         }
 
