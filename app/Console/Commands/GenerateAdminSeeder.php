@@ -27,7 +27,7 @@ class GenerateAdminSeeder extends Command
      */
     public function handle()
     {
-        $table = ['admin_menu', 'admin_permissions', 'admin_permission_menu', 'admin_roles', 'admin_role_menu', 'admin_role_permissions','media_sources'];
+        $table = ['admin_menu', 'admin_permissions', 'admin_permission_menu', 'admin_roles', 'admin_role_menu', 'admin_role_permissions'];
         return $this->call("iseed", [
             'tables' => implode(',', $table),
             '--force' => true,
