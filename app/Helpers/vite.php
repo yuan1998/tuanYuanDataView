@@ -11,25 +11,21 @@ if (!function_exists('vite_assets')) {
     {
         $devServerIsRunning = false;
 
-        if (app()->environment('local')) {
-            $devServerIsRunning = @file_get_contents(public_path('hot')) == 'dev';
-        }
-
-
-        if ($devServerIsRunning) {
-            return new HtmlString(<<<HTML
-            <script type="module" src="http://localhost:3002/@vite/client"></script>
-            <script type="module" src="http://localhost:3002/resources/js/app.js"></script>
-        HTML
-            );
-        }
-        $manifest = json_decode(file_get_contents(
+        $manifest = @json_decode(@file_get_contents(
             public_path('dist/manifest.json')
         ), true);
-        return new HtmlString(<<<HTML
+        if (isset($manifest['resources/js/app.js'])) {
+            return new HtmlString(<<<HTML
         <script type="module" src="/dist/{$manifest['resources/js/app.js']['file']}"></script>
         <link rel="stylesheet" href="/dist/{$manifest['resources/js/app.js']['css'][0]}">
     HTML
+            );
+        }
+
+        return new HtmlString(<<<HTML
+            <script type="module" src="http://localhost:3002/@vite/client"></script>
+            <script type="module" src="http://localhost:3002/resources/js/app.js"></script>
+        HTML
         );
     }
 }
